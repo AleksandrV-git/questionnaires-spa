@@ -39,7 +39,7 @@
             {{ props.row.description }}
           </q-td>
           <q-td v-bind:id="props.row.id" key="action" :props="props">
-            <!-- <q-icon v-on:click="removeQuestionnaire" name="mode_edit" /> -->
+            <q-icon v-on:click="$emit('edit-questionnaire', props.row.id)" name="mode_edit" />
             <q-icon v-on:click="$emit('remove-questionnaire', props.row.id)" name="delete" />
           </q-td>
         </q-tr>
