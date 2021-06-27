@@ -1,10 +1,10 @@
 <template>
   <div class="q-pa-md">
-    <router-link to="/questionnaries" exact
-      ><q-btn color="white" text-color="black" label="Добавит анкету"
-    /></router-link>
+    <router-link to="/form" exact>
+      <q-btn color="white" text-color="black" label="Добавит анкету" />
+    </router-link>
     <q-table
-      title="Treats"
+      title="Анкеты"
       :rows="questionnaires"
       :columns="columns"
       row-key="name"
@@ -35,10 +35,12 @@
             {{ props.row.description }}
           </q-td>
           <q-td v-bind:id="props.row.id" key="action" :props="props">
-            <q-icon
-              v-on:click="editQuestionnaire(props.row.id)"
-              name="mode_edit"
-            />
+            <router-link to="/form-edit" exact>
+              <q-icon
+                v-on:click="setCurrentQuestionnaire(props.row.id)"
+                name="mode_edit"
+              />
+            </router-link>
             <q-icon
               v-on:click="deleteQuestionnaire(props.row.id)"
               name="delete"
@@ -48,13 +50,10 @@
       </template>
     </q-table>
   </div>
-    <Form />
 </template>
 <script>
-import Form from "./Form.vue";
-import { computed } from "vue";
-import { useStore } from "vuex";
-import { mapMutations } from "vuex";
+import { mapMutations, mapGetters, useStore, mapState } from "vuex";
+import { computed, watch } from "vue";
 
 const columns = [
   {
@@ -78,8 +77,6 @@ const columns = [
 ];
 
 export default {
-  name: "App",
-  components: { Form },
 
   setup() {
     const $store = useStore();
@@ -87,12 +84,12 @@ export default {
     const questionnaires = computed({
       get: () => $store.state.questionnaires.questionnaires,
       set: (val) => {
-        $store.commit("questionnaires/addQuestionnaire", val);
-      },
-      del: (val) => {
-        $store.commit("questionnaires/deleteQuestionnaire", val);
+        $store.commit("questionnaires/setQuestionnaires", val);
       },
     });
+
+    const data = localStorage.questionnaires !== 'undefined' ? JSON.parse(localStorage.questionnaires) : questionnaires.value;
+    questionnaires.value = data.length !== 0 ? data : questionnaires.value
 
     return {
       questionnaires,
@@ -101,7 +98,11 @@ export default {
   },
 
   methods: {
-    ...mapMutations("questionnaires", ["deleteQuestionnaire", "editQuestionnaire"]),
+    ...mapMutations("questionnaires", [
+      "deleteQuestionnaire",
+      "setCurrentQuestionnaire",
+    ]),
+    ...mapGetters("questionnaires", ["getQuestionnaires"]),
   },
 };
 </script>

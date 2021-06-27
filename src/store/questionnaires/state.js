@@ -2,28 +2,20 @@ export default function () {
   return {
     questionnaires: [
       {
-        firstName: 1,
-        lastName: 2,
-        middleName: 3,
-        birthDate: 4,
-        description: 5,
+        firstName: "Иван",
+        lastName: "Иванов",
+        middleName: "Иванович",
+        birthDate: "25-08-1986",
+        description: "слесарь",
         id: 1,
       },
       {
-        firstName: 11,
-        lastName: 22,
-        middleName: 33,
-        birthDate: 44,
-        description: 55,
-        id: 22,
-      },
-      {
-        firstName: 1,
-        lastName: 2,
-        middleName: 3,
-        birthDate: 4,
-        description: 5,
-        id: 3,
+        birthDate: "21-03-1997",
+        description: "Электромонтер",
+        firstName: "Василий",
+        id: 1624823210763,
+        lastName: "Пупкин",
+        middleName: null,
       },
     ],
 
@@ -33,6 +25,7 @@ export default function () {
       middleName: null,
       birthDate: null,
       description: null,
+      id: null
     },
   }
 }

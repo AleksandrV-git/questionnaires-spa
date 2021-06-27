@@ -1,5 +1,5 @@
 <template>
-  <h4 style="margin-left: 16px">Создание новой анкеты</h4>
+  <h4 style="margin-left: 16px">Редактирование анкеты</h4>
   <div class="q-pa-md" style="max-width: 400px">
     <q-form @submit.prevent="onSubmit" @reset="onReset" class="q-gutter-md">
       <q-input
@@ -64,7 +64,7 @@
           class="q-ml-sm"
         />
         <router-link to="/" exact>
-          <q-btn color="primary" flat text-color="black" label="отмена"/>
+          <q-btn v-on:click="resetCurrentQuestionnaire()" color="primary" flat text-color="black" label="отмена"/>
         </router-link>
       </div>
     </q-form>
@@ -73,19 +73,28 @@
 
 <script>
 
-import { ref } from 'vue'
-import { mapGetters, mapMutations } from 'vuex'
+import { computed, ref } from 'vue'
+import { useStore, mapMutations, mapGetters } from 'vuex'
 
 export default {
   setup () {
+    const $store = useStore()
 
-  const firstName =  ref(null)
-  const lastName = ref(null)
-  const middleName = ref(null)
-  const birthDate = ref(null)
-  const description = ref(null)
+    const questionnaire = computed({
+      get: () => $store.state.questionnaires.questionnaire,
+      set: val => {
+        $store.commit('questionnaires/setCurrentQuestionnaire', val)
+      }
+    })
+
+  const firstName = ref(questionnaire.value.firstName)
+  const lastName = ref(questionnaire.value.lastName)
+  const middleName = ref(questionnaire.value.middleName)
+  const birthDate = ref(questionnaire.value.birthDate)
+  const description = ref(questionnaire.value.description)
 
     return {
+      questionnaire,
       firstName,
       lastName,
       middleName,
@@ -95,7 +104,7 @@ export default {
   },
 
   methods: {
-    ...mapMutations("questionnaires", ["addQuestionnaire", "getQuestionnaires"]),
+    ...mapMutations("questionnaires", ["addQuestionnaire", "resetCurrentQuestionnaire", "editQuestionnaire"]),
     ...mapGetters("questionnaires", ["getQuestionnaires"]),
 
     onSubmit() {
@@ -107,7 +116,7 @@ export default {
         description: this.description,
         id: Date.now(),
       };
-      this.addQuestionnaire(newQuestionnaire)
+      this.editQuestionnaire(newQuestionnaire)
       localStorage.questionnaires = JSON.stringify(this.getQuestionnaires());
       this.onReset();
     },
