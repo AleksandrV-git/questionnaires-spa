@@ -1,6 +1,6 @@
 # Quasar App (questionnaires-spa)
 
-A Quasar Framework app
+стек: Vue Quasar Framework, Vuex
 
 ## Install the dependencies
 ```bash
