@@ -9,7 +9,6 @@
       :columns="columns"
       row-key="name"
     >
-
       <template v-slot:header="props">
         <q-tr :props="props">
           <q-th v-for="col in props.cols" :key="col.name" :props="props">
@@ -20,10 +19,7 @@
 
       <template v-slot:body="props">
         <q-tr v-bind:id="props.row.id" :props="props">
-          <q-td
-            key="lastName"
-            :props="props"
-          >
+          <q-td key="lastName" :props="props">
             {{ props.row.lastName }}
           </q-td>
           <q-td key="firstName" :props="props">
@@ -39,16 +35,26 @@
             {{ props.row.description }}
           </q-td>
           <q-td v-bind:id="props.row.id" key="action" :props="props">
-            <q-icon v-on:click="$emit('edit-questionnaire', props.row.id)" name="mode_edit" />
-            <q-icon v-on:click="$emit('remove-questionnaire', props.row.id)" name="delete" />
+            <q-icon
+              v-on:click="editQuestionnaire(props.row.id)"
+              name="mode_edit"
+            />
+            <q-icon
+              v-on:click="deleteQuestionnaire(props.row.id)"
+              name="delete"
+            />
           </q-td>
         </q-tr>
       </template>
     </q-table>
   </div>
+    <Form />
 </template>
-
 <script>
+import Form from "./Form.vue";
+import { computed } from "vue";
+import { useStore } from "vuex";
+import { mapMutations } from "vuex";
 
 const columns = [
   {
@@ -72,12 +78,30 @@ const columns = [
 ];
 
 export default {
-  props: ['questionnaires'],
+  name: "App",
+  components: { Form },
+
   setup() {
+    const $store = useStore();
+
+    const questionnaires = computed({
+      get: () => $store.state.questionnaires.questionnaires,
+      set: (val) => {
+        $store.commit("questionnaires/addQuestionnaire", val);
+      },
+      del: (val) => {
+        $store.commit("questionnaires/deleteQuestionnaire", val);
+      },
+    });
+
     return {
+      questionnaires,
       columns,
     };
   },
-};
 
+  methods: {
+    ...mapMutations("questionnaires", ["deleteQuestionnaire", "editQuestionnaire"]),
+  },
+};
 </script>

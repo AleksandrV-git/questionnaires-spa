@@ -1,6 +1,5 @@
 <template>
   <div class="q-pa-md" style="max-width: 400px">
-    {{ questionnaire }}
     <q-form @submit.prevent="onSubmit" @reset="onReset" class="q-gutter-md">
       <q-input
         filled
@@ -65,10 +64,35 @@
 </template>
 
 <script>
+
+import { computed, ref } from 'vue'
+import { useStore, mapMutations } from 'vuex'
+
 export default {
-  props: ["questionnaire"],
-  data() {
-    return this.questionnaire;
+  setup () {
+    const $store = useStore()
+
+    const questionnaire = computed({
+      get: () => $store.state.questionnaires.questionnaire,
+      set: val => {
+        $store.commit('questionnaires/setCurrentQuestionnaire', val)
+      }
+    })
+
+  const firstName = ref(null)
+  const lastName = ref(null)
+  const middleName = ref(null)
+  const birthDate = ref(null)
+  const description = ref(null)
+
+    return {
+      questionnaire,
+      firstName,
+      lastName,
+      middleName,
+      birthDate,
+      description
+    }
   },
   watch: {
     questionnaire: function () {
@@ -80,6 +104,8 @@ export default {
     },
   },
   methods: {
+    ...mapMutations("questionnaires", ["addQuestionnaire"]),
+
     onSubmit() {
       const newQuestionnaire = {
         firstName: this.firstName,
@@ -90,7 +116,7 @@ export default {
         id: Date.now(),
       };
 
-      this.$emit("add-questionnaire", newQuestionnaire);
+      this.addQuestionnaire(newQuestionnaire)
       this.onReset();
     },
     onReset() {
