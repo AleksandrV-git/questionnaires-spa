@@ -1,5 +1,5 @@
 <template>
-  <h4 style="margin-left: 16px">Создание новой анкеты</h4>
+  <h5 style="margin-left: 16px">Создание новой анкеты</h5>
   <div class="q-pa-md" style="max-width: 400px">
     <q-form @submit.prevent="onSubmit" @reset="onReset" class="q-gutter-md">
       <q-input

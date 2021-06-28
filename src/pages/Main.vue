@@ -42,7 +42,8 @@
               />
             </router-link>
             <q-icon
-              v-on:click="deleteQuestionnaire(props.row.id)"
+              style="cursor: pointer; margin-left: 10px;"
+              v-on:click="handleDeleteQuestionnaire(props.row.id)"
               name="delete"
             />
           </q-td>
@@ -103,6 +104,12 @@ export default {
       "setCurrentQuestionnaire",
     ]),
     ...mapGetters("questionnaires", ["getQuestionnaires"]),
+
+    handleDeleteQuestionnaire(id) {
+      if (window.confirm("Запись будет удалена. Уверены?")) {
+        this.deleteQuestionnaire(id)
+      }
+    }
   },
 };
 </script>
